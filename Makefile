@@ -4,7 +4,7 @@
 COMPOSE_PREFIX_CMD := COMPOSE_DOCKER_CLI_BUILD=1
 
 COMPOSE_ALL_FILES := -f docker-compose.yml -f docker-compose.monitor.yml -f docker-compose.tools.yml -f docker-compose.nodes.yml
-ELK_SERVICES   := elasticsearch logstash kibana
+ELK_SERVICES   := elasticsearch logstash kibana apm
 ELK_MONITORING := elasticsearch-exporter logstash-exporter cadvisor-exporter filebeat-cluster-logs
 ELK_TOOLS  := curator elastalert
 ELK_NODES := elasticsearch-1 elasticsearch-2
@@ -29,6 +29,9 @@ all:		    ## Start Elk and all its component (ELK, Monitoring, and Tools).
 
 elk:		    ## Start ELK.
 	${COMPOSE_PREFIX_CMD} docker-compose ${COMPOSE_ALL_FILES} up -d --build ${ELK_SERVICES}
+
+rebuild:		    ## Start ELK.
+	${COMPOSE_PREFIX_CMD} docker-compose ${COMPOSE_ALL_FILES} up -d --build  --force-recreate ${ELK_SERVICES}
 
 monitoring:		## Start ELK Prometheus Monitoring.
 	${COMPOSE_PREFIX_CMD} docker-compose ${COMPOSE_ALL_FILES} up -d --build ${ELK_MONITORING}

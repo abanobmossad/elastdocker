@@ -1,0 +1,32 @@
+apm-server:
+  hosts: ["localhost:8200"]
+  kibana.host: "http://${KIBANA_HOST_PORT}"
+  kibana.enabled: true
+  kibana.username: ${ELASTIC_USERNAME}
+  kibana.password: ${ELASTIC_PASSWORD}
+
+
+output.elasticsearch:
+  hosts: [ "http://${ELASTICSEARCH_HOST_PORT}" ]
+  username: ${ELASTIC_USERNAME}
+  password: ${ELASTIC_PASSWORD}
+  indices:
+    - index: "apm-%{[beat.version]}-sourcemap"
+      when.contains:
+        processor.event: "sourcemap"
+    - index: "apm-%{[beat.version]}-error-%{+yyyy.MM.dd}"
+      when.contains:
+        processor.event: "error"
+    - index: "apm-%{[beat.version]}-transaction-%{+yyyy.MM.dd}"
+      when.contains:
+        processor.event: "transaction"
+    - index: "apm-%{[beat.version]}-span-%{+yyyy.MM.dd}"
+      when.contains:
+        processor.event: "span"
+    - index: "apm-%{[beat.version]}-metric-%{+yyyy.MM.dd}"
+      when.contains:
+        processor.event: "metric"
+    - index: "apm-%{[beat.version]}-onboarding-%{+yyyy.MM.dd}"
+      when.contains:
+        processor.event: "onboarding"
+
